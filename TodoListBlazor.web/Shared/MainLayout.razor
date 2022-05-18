@@ -1,0 +1,47 @@
+﻿@inherits LayoutComponentBase
+
+<PageTitle>Todo List</PageTitle>
+<Layout Sider>
+    <LayoutSider>
+        <LayoutSiderContent>
+            <NavMenu/>
+        </LayoutSiderContent>
+    </LayoutSider>
+    <Layout>
+    <LayoutHeader Fixed>
+        <TopBar/>
+    </LayoutHeader>
+        <LayoutContent Padding="Padding.Is4.OnX">
+            <ErrorBoundary @ref="errorBoundary">
+                <ChildContent>
+                    @Body
+                </ChildContent>
+                <ErrorContent>
+                    <Alert Color="Color.Danger" @bind-Visible="@visible">
+                        <AlertDescription TextAlignment="TextAlignment.Center">
+                            <a href="/"  >
+                                <Icon IconSize="IconSize.x2" Name="IconName.ChevronLeft"/>
+                                @context.Message
+                             </a>
+                        </AlertDescription>
+                    </Alert>
+                </ErrorContent>
+            </ErrorBoundary>
+        </LayoutContent>
+    <LayoutFooter Background="Background.Dark">
+        Todos los derechos reservaos<br />
+        No copia
+    </LayoutFooter>
+    </Layout>
+</Layout>
+
+@code
+{
+    bool visible = true;
+
+    ErrorBoundary errorBoundary;
+    protected override void OnParametersSet()
+    {
+        errorBoundary?.Recover();
+    }
+}

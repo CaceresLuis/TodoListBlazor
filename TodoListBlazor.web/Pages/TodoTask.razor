@@ -1,0 +1,40 @@
+﻿@page "/todoTask"
+@inherits TodoBase
+
+@if(Todos == null)
+{
+    <h3>Loadig...</h3>
+}
+else
+{
+    <h4>Task</h4>
+    <Table Hoverable>
+    <TableHeader>
+        <TableRow>
+            <TableHeaderCell>Title</TableHeaderCell>
+            <TableHeaderCell>Description</TableHeaderCell>
+            <TableHeaderCell>Status</TableHeaderCell>
+            <TableHeaderCell>Completed</TableHeaderCell>
+            <TableHeaderCell>Actions</TableHeaderCell>
+        </TableRow>
+    </TableHeader>
+    <TableBody>
+        @if(Todos.Count() > 0)
+            {
+                @foreach (var item in Todos)
+                {
+                    if (!item.IsCompleted)
+                    {
+                        <TableRow>
+                            <TableRowCell>@item.Title</TableRowCell>
+                            <TableRowCell>@item.Description</TableRowCell>
+                            <TableRowCell>@item.TodoState</TableRowCell>
+                            <TableRowCell>@item.IsCompleted</TableRowCell>
+                            <TableRowCell>Ver</TableRowCell>
+                        </TableRow>
+                    }
+                }
+            }
+    </TableBody>
+</Table>
+}

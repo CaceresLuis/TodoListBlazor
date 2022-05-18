@@ -1,0 +1,41 @@
+﻿@page "/createTodo"
+@using TodoListBlazor.Shared.Dtos
+@inherits CreateTodoBase
+
+
+<Fields Flex="Flex.JustifyContent.Center" Padding="Padding.Is5">
+    <Field ColumnSize="ColumnSize.Is7.OnDesktop">
+        <FieldLabel>Title</FieldLabel>
+        <TextEdit  @bind-Text="Title" Placeholder="titulo" />
+    </Field>
+    <Field  ColumnSize="ColumnSize.Is7.OnDesktop">
+        <FieldLabel>Description</FieldLabel>
+        <MemoEdit Rows="3" @bind-Text="@Description"/>
+    </Field>
+    <Field ColumnSize="ColumnSize.Is7.OnDesktop">
+        <FieldLabel>Status</FieldLabel>
+        <Select TValue="string" @bind-SelectedValue="@State" >
+                <SelectItem Value="Complete">Complete</SelectItem>
+                <SelectItem Value="Do">Do</SelectItem>
+                <SelectItem Value="Doing">Doing</SelectItem>
+                <SelectItem Value="Failed">Failed</SelectItem>
+                <SelectItem >Select Task Status...</SelectItem>
+        </Select>
+    </Field>
+    <Field ColumnSize="ColumnSize.Is8.OnDesktop">
+        <FieldLabel>Completed</FieldLabel>
+        <Check TValue="bool" @bind-Checked="@IsCompleted">
+            @if (@IsCompleted)
+                {
+                    <b>Completed</b>
+                }
+                else
+                {
+                    <b>In Completed</b>
+                }
+        </Check>
+    </Field>
+    <Button  Block Color="Color.Primary" Clicked="CreateTodo">
+        Create
+    </Button>
+</Fields>

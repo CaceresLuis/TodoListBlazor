@@ -1,0 +1,91 @@
+﻿@page "/"
+@inherits TodoBase
+
+@if(Todos == null)
+{
+    <h3>Loadig...</h3>
+}
+else
+{
+    <Field ColumnSize="ColumnSize.Is10" Padding="Padding.Is2.OnAll">
+        <Field Flex="Flex.JustifyContent.Between">
+            <h4>All Task</h4>
+            <Div>
+               <a href="createTodo" class="btn btn-primary" ><Icon Name="IconName.Add" /></a>
+            </Div>
+        </Field>
+    </Field>
+<Table Hoverable>
+    <TableHeader>
+        <TableRow>
+            <TableHeaderCell>Title</TableHeaderCell>
+            <TableHeaderCell>Description</TableHeaderCell>
+            <TableHeaderCell>Status</TableHeaderCell>
+            <TableHeaderCell>Completed</TableHeaderCell>
+            <TableHeaderCell>Actions</TableHeaderCell>
+        </TableRow>
+    </TableHeader>
+    <TableBody>
+        @if(Todos.Count() > 0)
+            {
+                @foreach (var item in Todos)
+                {
+                    <TableRow>
+                        <TableRowCell>@item.Title</TableRowCell>
+                        <TableRowCell>@item.Description</TableRowCell>
+                        <TableRowCell>@item.TodoState</TableRowCell>
+                        @if (@item.IsCompleted)
+                        {
+                            <TableRowCell><Icon TextColor="TextColor.Primary" Name="IconName.CheckCircle"/></TableRowCell>
+                        }else
+                        {
+                            <TableRowCell><Icon TextColor="TextColor.Info" Name="IconName.TimesCircle" /></TableRowCell>
+                        }
+                        <TableRowCell>
+                            <a href="todoUpdate/@item.Id" class="btn btn-warning" ><Icon Name="IconName.Edit" /></a>
+                            <Button Clicked="(() => ShowDeleteModal(item.Id))" Color="Color.Danger"><Icon Name="IconName.Delete" /></Button>
+                     </TableRowCell>
+                    </TableRow>
+                }
+            }
+    </TableBody>
+</Table>
+}
+
+<Modal @bind-Visible="@modalVisible">
+    <ModalContent Centered>
+        <ModalHeader>
+            <ModalTitle>Delete Task</ModalTitle>
+            <CloseButton />
+        </ModalHeader>
+        <ModalBody>
+            <h4>Do you really want to deleted this task</h4>
+        </ModalBody>
+        <ModalFooter>
+             <Button Clicked="HiddenDeleteModal"><Icon Name="IconName.Delete" /></Button>
+        </ModalFooter>
+    </ModalContent>
+</Modal>
+
+@code{
+
+    private Modal modalRef;
+    private bool modalVisible;
+
+    private Guid ItemId;
+    private Task ShowDeleteModal(Guid id)
+    {
+        ItemId = id;
+        modalVisible = true;
+        return Task.CompletedTask;
+    }
+
+    private async Task HiddenDeleteModal()
+    {
+        await TodoService.DeleteTodo(ItemId);
+        var itemDeleted = Todos.FirstOrDefault(t => t.Id == ItemId);
+        Todos.Remove(itemDeleted);
+        NavigationManager.NavigateTo("/");
+         modalVisible = false;
+    }
+}
